@@ -52,7 +52,7 @@ const InitialLayout = () => {
           title: "",
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
-              <AntDesign name="arrowleft" size={24} />
+              <AntDesign name="arrow-left" size={24} />
             </Pressable>
           ),
         }}

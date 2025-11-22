@@ -57,7 +57,7 @@ const SignUp = () => {
               <TouchableWithoutFeedback
                 onPress={() => router.replace("/sign-in")}
               >
-                <Text style={{ color: "#0064D2", fontWeight: "500" }}>
+                <Text style={{ color: "#272727", fontWeight: "500" }}>
                   Sign in
                 </Text>
               </TouchableWithoutFeedback>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 
   nextButton: {
-    backgroundColor: "#0064D2",
+    backgroundColor: "#272727",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,

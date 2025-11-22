@@ -8,14 +8,7 @@ const Layout = () => {
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: "",
-          headerTintColor: "#000",
-          headerTransparent: true,
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()}>
-              <AntDesign name="arrowleft" size={24} color="#000" />
-            </Pressable>
-          ),
+          headerShown: false,
         }}
       />
     </Stack>

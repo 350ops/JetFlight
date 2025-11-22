@@ -1,0 +1,191 @@
+import React, { useState, useEffect } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    ActivityIndicator,
+    StyleProp,
+    ViewStyle,
+    TextStyle,
+    Image,
+    TextInput
+} from 'react-native';
+import { BlurView } from 'expo-blur';
+import { searchAirports } from '../utils/amadeus';
+import { useDebounce } from '../utils/useDebounce';
+
+interface Airport {
+    iataCode: string;
+    name: string;
+    address: {
+        cityName: string;
+        countryName: string;
+    };
+}
+
+interface AirportAutocompleteProps {
+    placeholder?: string;
+    onSelect: (airport: Airport) => void;
+    containerStyle?: StyleProp<ViewStyle>;
+    inputStyle?: StyleProp<TextStyle>;
+    icon?: any;
+}
+
+const AirportAutocomplete: React.FC<AirportAutocompleteProps> = ({
+    placeholder,
+    onSelect,
+    containerStyle,
+    inputStyle,
+    icon
+}) => {
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState<Airport[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+    const [isSelection, setIsSelection] = useState(false);
+    const debouncedQuery = useDebounce(query, 500);
+
+    useEffect(() => {
+        if (debouncedQuery.length > 2 && !isSelection) {
+            search(debouncedQuery);
+        } else {
+            setResults([]);
+            setShowResults(false);
+        }
+    }, [debouncedQuery, isSelection]);
+
+    const search = async (text: string) => {
+        setLoading(true);
+        const data = await searchAirports(text);
+        setResults(data);
+        setLoading(false);
+        setShowResults(true);
+    };
+
+    const handleSelect = (item: Airport) => {
+        setIsSelection(true);
+        setQuery(`${item.address.cityName} (${item.iataCode})`);
+        setShowResults(false);
+        onSelect(item);
+    };
+
+    return (
+        <View style={styles.container}>
+            <BlurView intensity={30} tint="light" style={[styles.inputContainer, containerStyle]}>
+                {icon && <Image source={icon} style={styles.icon} />}
+                <TextInput
+                    placeholder={placeholder}
+                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    style={[styles.inputText, inputStyle]}
+                    value={query}
+                    onChangeText={(text) => {
+                        setQuery(text);
+                        setIsSelection(false);
+                    }}
+                    onFocus={() => {
+                        if (isSelection) {
+                            setQuery('');
+                            setIsSelection(false);
+                        }
+                        if (results.length > 0) setShowResults(true);
+                    }}
+                />
+                {loading && <ActivityIndicator size="small" color="#272727" />}
+            </BlurView>
+
+            {showResults && results.length > 0 && (
+                <BlurView intensity={80} tint="dark" style={styles.resultsContainer}>
+                    {results.map((item, index) => (
+                        <TouchableOpacity
+                            key={`${item.iataCode}-${index}`}
+                            style={styles.resultItem}
+                            onPress={() => handleSelect(item)}
+                        >
+                            <View style={styles.resultTextContainer}>
+                                <Text style={styles.cityCode}>{item.iataCode}</Text>
+                                <View>
+                                    <Text style={styles.cityName}>{item.address.cityName}</Text>
+                                    <Text style={styles.airportName}>{item.name}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </BlurView>
+            )}
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        position: 'relative',
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(128, 128, 128, 0.3)',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 100,
+        borderWidth: 1.4,
+        borderColor: 'rgba(255, 255, 255, 0.4)',
+        gap: 24,
+        overflow: 'hidden',
+    },
+    icon: {
+        tintColor: '#ffffff',
+        width: 28,
+        height: 20,
+        resizeMode: 'contain',
+    },
+    inputText: {
+        flex: 1,
+        color: '#ffffff',
+        fontWeight: '500',
+        fontSize: 15,
+    },
+    resultsContainer: {
+        backgroundColor: 'rgba(30, 30, 30, 0.85)',
+        borderRadius: 16,
+        marginTop: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        maxHeight: 250,
+        overflow: 'hidden',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    resultItem: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    resultTextContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+    },
+    cityCode: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: '#FFFFFF',
+        width: 50,
+    },
+    cityName: {
+        fontWeight: '600',
+        fontSize: 15,
+        color: '#FFFFFF',
+        marginBottom: 2,
+    },
+    airportName: {
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.6)',
+        textTransform: 'uppercase',
+    },
+});
+
+export default AirportAutocomplete;

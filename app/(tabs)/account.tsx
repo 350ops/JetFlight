@@ -41,7 +41,7 @@ const NavigationButton = ({
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 32 }}>
-          <Ionicons name={icon} size={24} color="#0064D2" />
+          <Ionicons name={icon} size={24} color="#272727" />
           <Text style={styles.btnName}>{name}</Text>
         </View>
         {visible && (
@@ -51,7 +51,7 @@ const NavigationButton = ({
           <Switch
             value={isSwitchOn}
             onValueChange={onToggleSwitch}
-            color="#0064D2"
+            color="#272727"
           />
         )}
       </Pressable>
@@ -106,8 +106,8 @@ const Account = () => {
           name="Quick Login"
           visible={false}
         />
-        <NavigationButton icon="settings-outline" name="Settings" 
-        pathname="settings"/>
+        <NavigationButton icon="settings-outline" name="Settings"
+          pathname="settings" />
         <NavigationButton icon="log-out-outline" name="Logout" />
       </ScrollView>
     </View>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
 
   profileContainer: {
-    backgroundColor: "#0064D2",
+    backgroundColor: "#272727",
     height: 220,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
