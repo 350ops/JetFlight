@@ -4,7 +4,7 @@
     "slug": "jet-flight",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/blue-icon.png",
+    "icon": "./assets/images/app-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/blue-icon.png",
+        "foregroundImage": "./assets/images/app-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.jet_flight"
