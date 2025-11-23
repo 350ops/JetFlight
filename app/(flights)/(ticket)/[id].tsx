@@ -89,26 +89,23 @@ const TicketDetail = () => {
           const seatmap = response.data[0];
 
           if (seatmap.decks && travelClass) {
-            // Log the complete structure to understand it
-            console.log('=== SEATMAP STRUCTURE DEBUG ===');
             console.log('Filtering for cabin class:', travelClass);
-            console.log('Number of decks:', seatmap.decks.length);
 
-            if (seatmap.decks[0]) {
-              console.log('Deck 0 keys:', Object.keys(seatmap.decks[0]));
-              console.log('Deck 0 full structure:', JSON.stringify(seatmap.decks[0], null, 2));
+            // Filter seats in the flat array by cabin class
+            const filteredDecks = seatmap.decks.map((deck: any) => {
+              const filteredSeats = deck.seats?.filter((seat: any) => seat.cabin === travelClass);
+              console.log(`Deck filtered: ${filteredSeats?.length || 0} seats match ${travelClass} out of ${deck.seats?.length || 0} total`);
 
-              if (seatmap.decks[0].seats) {
-                console.log('Deck 0 has seats array, length:', seatmap.decks[0].seats.length);
-                if (seatmap.decks[0].seats[0]) {
-                  console.log('First row structure:', JSON.stringify(seatmap.decks[0].seats[0], null, 2));
-                }
-              }
-            }
-            console.log('=== END STRUCTURE DEBUG ===');
+              return {
+                ...deck,
+                seats: filteredSeats && filteredSeats.length > 0 ? filteredSeats : deck.seats
+              };
+            });
 
-            // For now, don't filter - just show all seats
-            setSeatmapData(seatmap);
+            setSeatmapData({
+              ...seatmap,
+              decks: filteredDecks
+            });
           } else {
             setSeatmapData(seatmap);
           }
