@@ -10,6 +10,7 @@ import {
   Alert,
   Switch,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -45,6 +46,8 @@ const Home = () => {
   const [fromAirport, setFromAirport] = useState<any>(null);
   const [toAirport, setToAirport] = useState<any>(null);
   const [travelClass, setTravelClass] = useState("ECONOMY");
+  const screenWidth = Dimensions.get('window').width;
+  const today = new Date().toISOString().split('T')[0];
 
   const handleDateSelect = (day: any) => {
     setSelectedDate(day.dateString);
@@ -63,9 +66,11 @@ const Home = () => {
         style={styles.image}
         blurRadius={5}
       />
-      <View style={{ position: 'absolute', top: 70, left: 32, zIndex: 1 }}>
-        <Text style={[styles.heading, styles.headingStroke]}>seatMaps</Text>
-        <Text style={[styles.heading, { position: 'absolute', top: 10, left: 90 }]}>seatMaps</Text>
+      <View style={{ position: 'absolute', top: 70, width: screenWidth, zIndex: 1, alignItems: 'center' }}>
+        <View>
+          <Text style={[styles.heading, styles.headingStroke]}>seatMaps</Text>
+          <Text style={[styles.heading, { position: 'absolute', top: 10, left: 0 }]}>seatMaps</Text>
+        </View>
       </View>
 
       <View style={styles.screen}>
@@ -79,7 +84,7 @@ const Home = () => {
           <BlurView
             intensity={50}
             tint="light"
-            style={styles.cardContainer}
+            style={[styles.cardContainer, { marginHorizontal: screenWidth * 0.02 }]}
           >
             <View style={{ marginBottom: 8 }}>
               <Text style={styles.label}>From</Text>
@@ -110,11 +115,11 @@ const Home = () => {
                   textSectionTitleDisabledColor: 'rgba(255, 255, 255, 0.3)',
                   selectedDayBackgroundColor: 'rgba(255, 255, 255, 0.18)',
                   selectedDayTextColor: '#ffffff',
-                  todayTextColor: '#ffffff',
+                  todayTextColor: '#0077ffff',
                   dayTextColor: '#ffffff',
-                  textDisabledColor: 'rgba(255, 255, 255, 0.3)',
+                  textDisabledColor: '#ffffff',
                   dotColor: '#ffffff',
-                  selectedDotColor: '#ffffff',
+                  selectedDotColor: '#ffff  ff',
                   arrowColor: '#ffffff',
                   disabledArrowColor: 'rgba(255, 255, 255, 0.3)',
                   monthTextColor: '#ffffff',
@@ -131,11 +136,26 @@ const Home = () => {
                 }}
                 style={{ height: 350 }}
                 markedDates={{
+                  [today]: {
+                    marked: true,
+                    dotColor: 'transparent',
+                    customStyles: {
+                      container: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        borderRadius: 16,
+                      },
+                      text: {
+                        color: '#ffffff',
+                        fontWeight: 'bold',
+                      },
+                    },
+                  },
                   [selectedDate]: {
                     selected: true,
                     selectedColor: 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
+                markingType={'custom'}
               />
 
             </View>
@@ -224,9 +244,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 36,
     fontWeight: "bold",
-    position: "absolute",
-    top: 70,
-    left: 32,
     textShadowColor: "rgba(49, 49, 49, 0.71)",
     textShadowOffset: { width: 1, height: 5 },
     textShadowRadius: 4,
@@ -259,7 +276,7 @@ const styles = StyleSheet.create({
   },
 
   formContent: {
-    padding: 20,
+    padding: 10,
     paddingBottom: 40,
   },
 

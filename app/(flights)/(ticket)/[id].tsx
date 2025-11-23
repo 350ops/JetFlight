@@ -103,11 +103,21 @@ const TicketDetail = () => {
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
-          <BlurView intensity={50} tint="light" style={styles.backButtonContainer}>
-            <Pressable onPress={() => router.back()} style={styles.backButton}>
-              <AntDesign name="arrow-left" size={22} color="#fff" />
-            </Pressable>
-          </BlurView>
+          <Pressable
+            onPress={() => router.back()}
+            style={{
+              backgroundColor: "transparent",
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: -2,
+              marginTop: -2
+            }}
+          >
+            <AntDesign name="arrow-left" size={22} color="#fff" />
+          </Pressable>
           <View>
             <Text style={styles.title}>Seat Map</Text>
             {cabin ? <Text style={styles.subtitle}>{cabin.replace(/_/g, " ")} CLASS</Text> : null}
